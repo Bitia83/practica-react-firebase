@@ -8,7 +8,7 @@ const Register = () => {
 const navegate = useNavigate()
  const { registerUser } = useContext(UserContext);
 
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { register, handleSubmit, formState: { errors }, getValues } = useForm()
   
   const onSubmit = data => console.log(data)
 
@@ -38,7 +38,12 @@ const navegate = useNavigate()
             required: {
               value: true,
               message:"campo obligatorio"
-         }})}
+            },
+            pattern: {
+              value: /[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0.9-]+)*(\.[a-z]{2,15})/,
+              message:"formato email incorrecto",
+            }
+          })}
         />
         {
           errors.email && <p>{ errors.email.message}</p>
@@ -58,8 +63,16 @@ const navegate = useNavigate()
           <input
           type="password"
           placeholder="ingrese password"
-        {...register("repassword" )}
+          {...register("repassword", {
+            validate: {
+              equals: v => v === getValues("password") || "no coinciden las contraseñas",
+             
+          }
+        } )}
         />
+        {
+          errors.repassword && <p>{ errors.repassword.message}</p>
+        }
           <button type="submit">Register</button>
       </form>
     </>
