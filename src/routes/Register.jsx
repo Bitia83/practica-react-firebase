@@ -34,20 +34,31 @@ const navegate = useNavigate()
         <input
           type="email"
           placeholder="ingrese email"
-         {...register("email", {required:true})}
+          {...register("email", {
+            required: {
+              value: true,
+              message:"campo obligatorio"
+         }})}
         />
         {
-          errors.email &&<p>Campo obligatorio</p>
+          errors.email && <p>{ errors.email.message}</p>
         }
           <input
           type="password"
           placeholder="ingrese password"
-        {...register("password")}
+          {...register("password", {
+            minLength: {
+              value: 6,
+              message: "minimo 6 caracteres"
+        }})}
         />
+        {
+          errors.password && <p>{errors.password.message}</p>
+        }
           <input
           type="password"
           placeholder="ingrese password"
-        {...register("repassword")}
+        {...register("repassword" )}
         />
           <button type="submit">Register</button>
       </form>
