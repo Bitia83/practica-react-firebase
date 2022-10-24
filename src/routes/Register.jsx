@@ -8,24 +8,33 @@ const Register = () => {
 const navegate = useNavigate()
  const { registerUser } = useContext(UserContext);
 
-  const { register, handleSubmit, formState: { errors }, getValues } = useForm()
+  const { register, handleSubmit, formState: { errors }, getValues, setError } = useForm()
   
-  const onSubmit = data => console.log(data)
+  const onSubmit = async ({ email, password }) => {
+    console.log(email, password)
+    try {
+      await registerUser(email, password)
+      console.log("Usuario creado");
+      navegate('/')
+    } catch (error) {
+      console.log(error.code)
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          setError("email", {
+            message: "usuario ya registrado"
+          })
+          break;
+        case 'auth/invalid-email':
+          setError("email", {
+            message: "formato email no valido"
+          });
+          break;
+        default:
+          console.log('ocurrio un error en el server')
+      }
+    }
+  };
 
-  
-  
-  // const handleSubmit = async (e) => {
-   
-  //   e.preventDefault();
-  //   console.log('procesando form: ', email, password);
-  //   try {
-  //     await registerUser(email, password)
-  //     console.log("Usuario creado");
-  //     navegate('/')
-  //   } catch (error) {
-  //     console.log(error.code)
-  //   }
-  // };
 
   return (
     <>
@@ -52,10 +61,19 @@ const navegate = useNavigate()
           type="password"
           placeholder="ingrese password"
           {...register("password", {
+           // setValueAs: v => v.trim(),
             minLength: {
               value: 6,
               message: "minimo 6 caracteres"
-        }})}
+            },
+            validate: {
+              trim: v => {
+                if (!v.trim())
+                  return "no espacios"
+                true
+              },
+            },
+          })}
         />
         {
           errors.password && <p>{errors.password.message}</p>
@@ -64,6 +82,7 @@ const navegate = useNavigate()
           type="password"
           placeholder="ingrese password"
           {...register("repassword", {
+            setValueAs: v => v.trim(),
             validate: {
               equals: v => v === getValues("password") || "no coinciden las contraseñas",
              
@@ -78,5 +97,6 @@ const navegate = useNavigate()
     </>
   )
 }
+
 
 export default Register;
