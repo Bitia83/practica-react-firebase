@@ -1,3 +1,4 @@
+import ExampleRef from "../components/ExampleRef"
 
 
 const Home = () => {
@@ -5,7 +6,8 @@ const Home = () => {
     <>
       <h1>
         Home
-        </h1>
+      </h1>
+      <ExampleRef/>
     </>
   )
 }

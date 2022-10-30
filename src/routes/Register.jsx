@@ -1,102 +1,82 @@
-import { useContext, useState } from "react"
-import { UserContext } from "../context/UserProvider"
+import { useContext } from "react";
+import { UserContext } from "../context/UserProvider";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { erroresFireBase } from "../utils/erroresFireBase";
+import FormError from "../components/FormError";
+import { formValidate } from "../utils/formValidate";
+import FormImput from "../components/FormImput";
 
 const Register = () => {
+  const navegate = useNavigate();
+  const { registerUser } = useContext(UserContext);
+  const { required, patternEmail, minLength, validateTrim, validateEquals } =
+    formValidate();
 
-const navegate = useNavigate()
- const { registerUser } = useContext(UserContext);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    setError,
+  } = useForm();
 
-  const { register, handleSubmit, formState: { errors }, getValues, setError } = useForm()
-  
   const onSubmit = async ({ email, password }) => {
-    console.log(email, password)
     try {
-      await registerUser(email, password)
-      console.log("Usuario creado");
-      navegate('/')
+      await registerUser(email, password);
+      navegate("/");
     } catch (error) {
-      console.log(error.code)
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          setError("email", {
-            message: "usuario ya registrado"
-          })
-          break;
-        case 'auth/invalid-email':
-          setError("email", {
-            message: "formato email no valido"
-          });
-          break;
-        default:
-          console.log('ocurrio un error en el server')
-      }
+      console.log(error.code);
+      setError("firebase", {
+        message: erroresFireBase(error.code),
+      });
     }
   };
-
 
   return (
     <>
       <h1>Register</h1>
+
+      <FormError error={errors.firebase} />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input
+        <FormImput
           type="email"
           placeholder="ingrese email"
           {...register("email", {
-            required: {
-              value: true,
-              message:"campo obligatorio"
-            },
-            pattern: {
-              value: /[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0.9-]+)*(\.[a-z]{2,15})/,
-              message:"formato email incorrecto",
-            }
+            required,
+            pattern: patternEmail,
           })}
-        />
-        {
-          errors.email && <p>{ errors.email.message}</p>
-        }
-          <input
+        >
+          <FormError error={errors.email} />
+        </FormImput>
+
+        <FormImput
           type="password"
           placeholder="ingrese password"
           {...register("password", {
-           // setValueAs: v => v.trim(),
-            minLength: {
-              value: 6,
-              message: "minimo 6 caracteres"
-            },
-            validate: {
-              trim: v => {
-                if (!v.trim())
-                  return "no espacios"
-                true
-              },
-            },
+            // setValueAs: v => v.trim(),
+            minLength,
+            validate: validateTrim,
           })}
-        />
-        {
-          errors.password && <p>{errors.password.message}</p>
-        }
-          <input
+        >
+          <FormError error={errors.password} />
+        </FormImput>
+
+        <FormImput
           type="password"
           placeholder="ingrese password"
           {...register("repassword", {
-            setValueAs: v => v.trim(),
-            validate: {
-              equals: v => v === getValues("password") || "no coinciden las contraseñas",
-             
-          }
-        } )}
-        />
-        {
-          errors.repassword && <p>{ errors.repassword.message}</p>
-        }
-          <button type="submit">Register</button>
+            //setValueAs: v => v.trim(),
+            validate: validateEquals(getValues),
+          })}
+        >
+          <FormError error={errors.repassword} />
+        </FormImput>
+
+        <button type="submit">Register</button>
       </form>
     </>
-  )
-}
-
+  );
+};
 
 export default Register;
