@@ -6,6 +6,9 @@ import { erroresFireBase } from "../utils/erroresFireBase";
 import FormError from "../components/FormError";
 import FormImput from "../components/FormImput";
 import { formValidate } from "../utils/formValidate";
+import Title from "../components/Title";
+import  Button from "../components/Button";
+
 
 const Login = () => {
   const { loginUser } = useContext(UserContext);
@@ -26,28 +29,29 @@ const Login = () => {
       navegate("/");
     } catch (error) {
       console.log(error.code);
-      setError("firebase", {
-        message: erroresFireBase(error.code),
-      });
+      const {code, message} = erroresFireBase(error.code)
+      setError(code, {message});
     }
   };
 
   return (
     <>
-      <h1>Login</h1>
-      <FormError error={errors.firebase} />
+      <Title text="Login"/>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormImput
+          label="ingrese email"
           type="email"
           placeholder="ingrese email"
           {...register("email", {
             required,
             pattern: patternEmail,
           })}
+          error={errors.email}
         >
           <FormError error={errors.email} />
         </FormImput>
         <FormImput
+          label="ingrese password"
           type="password"
           placeholder="ingrese password"
           {...register("password", {
@@ -55,10 +59,11 @@ const Login = () => {
             minLength,
             validate: validateTrim,
           })}
+          error={errors.password}
         >
           <FormError error={errors.password} />
         </FormImput>
-        <button type="submit">Login</button>
+        <Button text="Login" type="submit"/>
       </form>
     </>
   );

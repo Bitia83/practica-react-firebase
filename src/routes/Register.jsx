@@ -6,6 +6,8 @@ import { erroresFireBase } from "../utils/erroresFireBase";
 import FormError from "../components/FormError";
 import { formValidate } from "../utils/formValidate";
 import FormImput from "../components/FormImput";
+import Title from "../components/Title";
+import  Button from "../components/Button";
 
 const Register = () => {
   const navegate = useNavigate();
@@ -27,17 +29,14 @@ const Register = () => {
       navegate("/");
     } catch (error) {
       console.log(error.code);
-      setError("firebase", {
-        message: erroresFireBase(error.code),
-      });
+      const {code, message} = erroresFireBase(error.code)
+      setError(code, {message});
     }
   };
 
   return (
     <>
-      <h1>Register</h1>
-
-      <FormError error={errors.firebase} />
+      <Title text="Register"/>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormImput
           type="email"
@@ -46,6 +45,8 @@ const Register = () => {
             required,
             pattern: patternEmail,
           })}
+          label="ingresa tu correo"
+          error={errors.email}
         >
           <FormError error={errors.email} />
         </FormImput>
@@ -58,6 +59,8 @@ const Register = () => {
             minLength,
             validate: validateTrim,
           })}
+          label="Ingrese password"
+          error={errors.password}
         >
           <FormError error={errors.password} />
         </FormImput>
@@ -69,11 +72,13 @@ const Register = () => {
             //setValueAs: v => v.trim(),
             validate: validateEquals(getValues),
           })}
+          label="Repita password"
+          error={errors.repassword}
         >
           <FormError error={errors.repassword} />
         </FormImput>
 
-        <button type="submit">Register</button>
+        <Button text="Register" type="submit"/>
       </form>
     </>
   );
