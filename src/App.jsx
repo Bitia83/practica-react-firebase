@@ -4,9 +4,13 @@ import Login from "./routes/Login";
 import Home from "./routes/Home";
 import Register from "./routes/Register";
 import Navbar from "./components/Navbar";
-import RequireAuth from "./components/RequireAuth";
  import { useContext } from "react";
 import { UserContext } from "./context/UserProvider";
+import LayoutContainer from "./components/Layaouts/LayoutContainer";
+import Perfil from "./routes/Perfil";
+import LayoutRequireAuth from "./components/Layaouts/LayoutRequireAuth";
+import NotFound from "./routes/NotFound";
+
 
 const App = () => {
      const { user } = useContext(UserContext);
@@ -18,18 +22,18 @@ const App = () => {
     return (
         <>
             <Navbar />
-            <h1>APP</h1>
+        
             <Routes>
-                <Route
-                    path="/"
-                    element={
-                        <RequireAuth>
-                            <Home />
-                        </RequireAuth>
-                    }
-                />
+                <Route path="/" element={<LayoutRequireAuth/>}>
+                    <Route index element={<Home />}/>
+                    <Route path="perfil" element={<Perfil />}/>
+                    
+                </Route>
+                <Route path="/" element={<LayoutContainer/>}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                </Route>
+               <Route path="*" element={<NotFound/>}/>
             </Routes>
         </>
     );
