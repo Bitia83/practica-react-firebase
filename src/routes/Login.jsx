@@ -8,7 +8,7 @@ import FormImput from "../components/FormImput";
 import { formValidate } from "../utils/formValidate";
 import Title from "../components/Title";
 import  Button from "../components/Button";
-import ButtonLoading from "../components/ButtonLoading";
+
 
 
 const Login = () => {
@@ -69,7 +69,7 @@ const Login = () => {
           <FormError error={errors.password} />
         </FormImput>
       
-            <Button text="Login" type="submit" loading={loading}/>
+            <Button text="Login" type="submit" loading={loading} color="blue"/>
         
        
       </form>
