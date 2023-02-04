@@ -71,19 +71,20 @@ const Register = () => {
         </FormImput>
 
         <FormImput
-          type="password"
-          placeholder="ingrese password"
-          {...register("repassword", {
-            //setValueAs: v => v.trim(),
-            validate: validateEquals(getValues),
-          })}
-          label="Repita password"
-          error={errors.repassword}
+           type="password"
+           placeholder="Ingrese Password"
+           {...register("repassword", {
+               validate: validateEquals(getValues("password")),
+           })}
+           label="Repite contraseña"
+           error={errors.repassword}
         >
           <FormError error={errors.repassword} />
         </FormImput>
       
-            <Button text="Register" type="submit" loading={loading}/>
+        <Button text="Register" type="submit" loading={loading}
+        color="blue"
+        />
       
        
       </form>
