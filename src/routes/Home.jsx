@@ -77,7 +77,7 @@ const [newOriginID, setNewOriginID] = useState()
       <FormImput
           label="ingrese url"
           type="text"
-          placeholder="https://bluuweb.org"
+          placeholder=""
           {...register("url", {
             required,
             pattern: patternURL,

@@ -14,7 +14,7 @@ const Register = () => {
   const navegate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { registerUser } = useContext(UserContext);
-  const { required, patternEmail, minLength, validateTrim, validateEquals } =
+  const { required, patternEmail, minLength, validateTrim } =
     formValidate();
 
   const {
@@ -71,19 +71,22 @@ const Register = () => {
         </FormImput>
 
         <FormImput
-          type="password"
-          placeholder="ingrese password"
-          {...register("repassword", {
-            //setValueAs: v => v.trim(),
-            validate: validateEquals(getValues),
-          })}
-          label="Repita password"
-          error={errors.repassword}
+           type="password"
+           placeholder="Ingrese Password"
+           {...register("repassword", {
+             validate: {
+                 equals: (v) => v === getValues("password") || "No coinciden las contraseñas"
+               }
+           })}
+           label="Repite contraseña"
+           error={errors.repassword}
         >
           <FormError error={errors.repassword} />
         </FormImput>
       
-            <Button text="Register" type="submit" loading={loading}/>
+        <Button text="Register" type="submit" loading={loading}
+        color="blue"
+        />
       
        
       </form>
