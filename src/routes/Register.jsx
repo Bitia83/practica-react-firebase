@@ -14,7 +14,7 @@ const Register = () => {
   const navegate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { registerUser } = useContext(UserContext);
-  const { required, patternEmail, minLength, validateTrim, validateEquals } =
+  const { required, patternEmail, minLength, validateTrim } =
     formValidate();
 
   const {
@@ -74,7 +74,9 @@ const Register = () => {
            type="password"
            placeholder="Ingrese Password"
            {...register("repassword", {
-               validate: validateEquals(getValues("password")),
+             validate: {
+                 equals: (v) => v === getValues("password") || "No coinciden las contraseñas"
+               }
            })}
            label="Repite contraseña"
            error={errors.repassword}

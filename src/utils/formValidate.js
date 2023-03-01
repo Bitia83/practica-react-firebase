@@ -1,4 +1,4 @@
-export const formValidate = (getValues) => {
+export const formValidate = () => {
   return {
     required: {
       value: true,
@@ -22,12 +22,12 @@ export const formValidate = (getValues) => {
           return "no espacios"
         }
         return true;
-      }
+      },
     },
-    validateEquals(value) {
-      return {
-        equals: (v) => v === value || "No coinciden las contraseñas",
-      };
-    },
-  }
-}
+    // validateEquals(value) {
+    //   return {
+    //     equals: (v) => v === value || "No coinciden las contraseñas",
+    //   };
+    // },
+  };
+};
